@@ -60,10 +60,12 @@ GEM
     mustermann (1.0.3)
     mustermann-grape (1.0.0)
       mustermann (~> 1.0.0)
+    pg (1.1.4)
     rack (2.0.7)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rake (10.5.0)
+    require_all (2.0.0)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -95,7 +97,9 @@ DEPENDENCIES
   dry-transaction
   grape (~> 1.2.3)
   graped_moviez!
+  pg (= 1.1.4)
   rake (~> 10.0)
+  require_all (~> 2.0.0)
   rspec (~> 3.0)
   sequel (= 5.23.0)
 

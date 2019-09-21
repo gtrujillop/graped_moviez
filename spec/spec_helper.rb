@@ -11,4 +11,9 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+  config.before(:all) do
+    GrapedMoviez.configure do |conf|
+      conf.db_url = 'postgres://postgres@localhost:5433/graped_moviez_test'
+    end
+  end
 end
