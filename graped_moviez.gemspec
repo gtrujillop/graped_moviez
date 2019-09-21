@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Gaston Trujillo"]
   spec.email         = ["gaston.trujillo.java@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.summary       = "lightweight ruby API for movies and reservations"
+  spec.description   = "lightweight ruby API for movies and reservations using ruby, grape and sequel"
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
@@ -39,4 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "grape", "~> 1.2.3"
+  spec.add_development_dependency "sequel", "5.23.0"
+  spec.add_development_dependency "dry-transaction"
 end
