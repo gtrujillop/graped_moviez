@@ -1,10 +1,11 @@
+require 'dry-configurable'
+require "dry/configurable/test_interface"
+
 module GrapedMoviez
   class Configuration
-    attr_accessor :db_url
-
-    def initialize()
-      @db_url = nil
-    end
+    extend Dry::Configurable
     
+    setting :db_url, ENV['DATABASE_URL']
+    setting :env, :development
   end
 end

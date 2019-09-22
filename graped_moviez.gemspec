@@ -41,9 +41,13 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "factory_bot", "~> 5.0.0"
   spec.add_development_dependency "grape", "~> 1.2.3"
   spec.add_development_dependency "sequel", "5.23.0"
   spec.add_development_dependency "sequel-seed", "1.1.2"
   spec.add_development_dependency "dry-transaction"
   spec.add_development_dependency "pg", "1.1.4"
+  spec.add_development_dependency "dry-configurable"
+  spec.add_development_dependency "byebug"
+
 end

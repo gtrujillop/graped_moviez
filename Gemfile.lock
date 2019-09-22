@@ -16,6 +16,7 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     builder (3.2.3)
+    byebug (11.0.1)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.1.5)
@@ -46,6 +47,8 @@ GEM
       dry-matcher (>= 0.7.0)
       dry-monads (>= 0.4.0)
     equalizer (0.0.11)
+    factory_bot (5.0.2)
+      activesupport (>= 4.2.0)
     grape (1.2.4)
       activesupport
       builder
@@ -96,7 +99,10 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 2.0)
+  byebug
+  dry-configurable
   dry-transaction
+  factory_bot (~> 5.0.0)
   grape (~> 1.2.3)
   graped_moviez!
   pg (= 1.1.4)

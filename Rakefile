@@ -8,19 +8,25 @@ task :default => :spec
 
 namespace :db do
   desc "Run migrations"
-  task :migrate, [:version] do |t, args|
+  task :migrate do |t, args|
     require "sequel/core"
     Sequel.extension :migration
-    version = args[:version].to_i if args[:version]
-    Sequel.connect(ENV.fetch("DATABASE_URL")) do |db|
+    ARGV.each { |a| task a.to_sym do ; end }
+    version = ARGV[1].to_i if ARGV[1]
+    env = ARGV[2].to_sym if ARGV[2]
+    db_url = env == :test ? 'postgres://postgres@localhost:5433/graped_moviez_test' : ENV.fetch("DATABASE_URL")
+    Sequel.connect(db_url) do |db|
       Sequel::Migrator.run(db, "lib/db/migrations", target: version)
     end
   end
-  task :seed do |t, args|
+  desc "Fills the DB in from seed files"
+  task :seed, [:env] do |t, args|
     require 'sequel'
     require 'sequel/extensions/seed'    
     Sequel.extension :seed
-    Sequel.connect(ENV.fetch("DATABASE_URL")) do |db|
+    env = args[:env].to_sym if args[:env]
+    db_url = env == :test ? 'postgres://postgres@localhost:5433/graped_moviez_test' : ENV.fetch("DATABASE_URL")
+    Sequel.connect(db_url) do |db|
       Sequel::Seeder.apply(db, "lib/db/seeds")
     end
   end
