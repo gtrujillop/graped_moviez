@@ -1,13 +1,14 @@
 require 'sequel'
-require_all 'graped_moviez/db'
+require 'date'
+require 'grape'
 require "graped_moviez/configuration"
 require "graped_moviez/version"
-require "graped_moviez/db_config"
 require "graped_moviez/api/v1/movies"
 require "graped_moviez/api/v1/reservations"
-require "graped_movies/models/movie"
-require "graped_movies/models/reservation"
-require "graped_movies/models/user"
+require "graped_moviez/models/movie"
+require "graped_moviez/models/reservation"
+require "graped_moviez/models/function"
+require "graped_moviez/models/day"
 
 module GrapedMoviez
   class << self

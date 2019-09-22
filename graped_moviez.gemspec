@@ -2,6 +2,7 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "graped_moviez/version"
+require 'require_all'
 
 Gem::Specification.new do |spec|
   spec.name          = "graped_moviez"
@@ -42,6 +43,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "grape", "~> 1.2.3"
   spec.add_development_dependency "sequel", "5.23.0"
+  spec.add_development_dependency "sequel-seed", "1.1.2"
   spec.add_development_dependency "dry-transaction"
   spec.add_development_dependency "pg", "1.1.4"
 end
