@@ -1,5 +1,7 @@
 require "bundler/gem_tasks"
 require "rspec/core/rake_task"
+require "graped_moviez"
+
 # require 'graped_moviez'
 
 RSpec::Core::RakeTask.new(:spec)
@@ -28,6 +30,24 @@ namespace :db do
     db_url = env == :test ? 'postgres://postgres@localhost:5433/graped_moviez_test' : ENV.fetch("DATABASE_URL")
     Sequel.connect(db_url) do |db|
       Sequel::Seeder.apply(db, "lib/db/seeds")
+    end
+  end
+end
+
+namespace :grape do
+  desc "Condensed API Routes"
+  task :routes do
+    mapped_prefix = '/api/v1' # where mounted in routes.rb
+    format = "%46s %3s %7s %s"
+    GrapedMoviez::Api::V1::Api.routes.each do |grape_route|
+      info = grape_route.instance_variable_get :@options
+
+      puts format % [
+        info[:description] ? info[:description][0..45] : '',
+        info[:version],
+        info[:method],
+        mapped_prefix + grape_route.path
+      ]
     end
   end
 end
