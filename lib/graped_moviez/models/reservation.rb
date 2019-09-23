@@ -19,7 +19,7 @@ module GrapedMoviez
       private
 
       def seats_reserved
-        Reservation.where(function_id: self.function_id).map(&:seats).reduce(:+)
+        Reservation.where(function_id: self.function_id).map(&:seats).reduce(:+) || 0
       end
 
       def seats_available
