@@ -1,5 +1,4 @@
 require "bundler/setup"
-require 'graped_moviez/configuration'
 require "graped_moviez"
 require "factory_bot"
 
@@ -15,8 +14,8 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
   config.before(:suite) do
-    GrapedMoviez::Configuration.config.db_url = 'postgres://postgres@localhost:5433/graped_moviez_test'
-    GrapedMoviez::Configuration.config.env = :test
+    # GrapedMoviez::Configuration.config.db_url = 'postgres://postgres@localhost:5433/graped_moviez_test'
+    # GrapedMoviez::Configuration.config.env = :test
     FactoryBot.find_definitions
   end
 end
