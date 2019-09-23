@@ -4,7 +4,7 @@ module GrapedMoviez
     class Day < Sequel::Model
       def validate
         super
-        errors.add(:day, "can't be blank") if day.empty?
+        errors.add(:day, "can't be blank") if day.nil?
       end
     end
   end
