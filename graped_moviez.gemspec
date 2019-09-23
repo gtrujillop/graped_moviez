@@ -2,7 +2,6 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "graped_moviez/version"
-require 'require_all'
 
 Gem::Specification.new do |spec|
   spec.name          = "graped_moviez"
