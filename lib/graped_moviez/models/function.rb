@@ -12,14 +12,6 @@ module GrapedMoviez
         errors.add(:day, "can't be blank") if day.nil?
         errors.add(:movie, "can't be blank") if movie.nil?
       end
-
-      def seats_reserved
-        Reservation.where(function_id: self.id).map(&:seats).reduce(:+)
-      end
-
-      def max_seats_reached?
-        seats_reserved > MAX_SEATS
-      end
     end
   end
 end
