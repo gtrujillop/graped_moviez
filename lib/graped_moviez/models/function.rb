@@ -12,6 +12,14 @@ module GrapedMoviez
         errors.add(:day, "can't be blank") if day.nil?
         errors.add(:movie, "can't be blank") if movie.nil?
       end
+
+      def self.by_day(day_id)
+        Function.where(day_id: day_id)
+      end
+
+      def self.by_movie(movie_id)
+        Movie.where(movie_id: movie_id)
+      end
     end
   end
 end

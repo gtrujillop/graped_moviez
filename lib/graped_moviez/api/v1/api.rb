@@ -1,3 +1,4 @@
+require "graped_moviez/api/v1/operations_helper"
 require "graped_moviez/models/movie"
 require "graped_moviez/models/day"
 require "graped_moviez/models/function"
@@ -7,6 +8,7 @@ module GrapedMoviez
   module Api
     module V1
       class Api < Grape::API
+        helpers OperationsHelper
         Movie = GrapedMoviez::Models::Movie
         Function = GrapedMoviez::Models::Function
         Day = GrapedMoviez::Models::Day
@@ -19,8 +21,7 @@ module GrapedMoviez
         
         desc 'Renders a list of movies.'
         get :movies do
-          movies = GrapedMoviez::Models::Movie.all.map(&:values)
-          { movies: movies }
+          render_simple(:movie)
         end
 
         desc 'Creates a movie.'
@@ -37,12 +38,7 @@ module GrapedMoviez
             description: params[:movie][:description],
             image_url: params[:movie][:image_url]
           )
-          if movie.save
-            { movie: movie.values }
-          else
-            status 520
-            { errors: "Could not create a movie #{movie.errors}"}
-          end
+          save(movie)
         end
 
         desc 'Creates a day.'
@@ -55,12 +51,7 @@ module GrapedMoviez
           day = Day.new(
             day: params[:day][:day].to_date
           )
-          if day.save
-            { day: day.values }
-          else
-            status 520
-            { errors: "Could not create a day #{day.errors}"}
-          end
+          save(day)
         end
 
         desc 'Creates a Function from a given movie and date.'
@@ -71,22 +62,18 @@ module GrapedMoviez
           end
         end
         post :functions do
-          day = Day.where(day: params[:function][:day]&.to_date).first
-          movie = Movie.where(Sequel.lit('LOWER(name) LIKE ?', "#{params[:function][:movie]&.downcase}")).first
+          day = Day.by_day(params[:function][:day]&.to_date).first
+          movie = Movie.by_name(params[:function][:movie]).first
           if day && movie
             function = Function.new(
               movie_id: movie.id,
               day_id: day.id,
             )
-            if function.save
-              serialized_function = {}.tap do |func|
+            save(function) do
+              {}.tap do |func|
                 func[:day] = day.values
                 func[:movie] = movie.values
               end
-              { function: serialized_function.values }
-            else
-              status 520
-              { errors: "Could not create a function: #{function.errors}"}
             end
           else
             status 400
@@ -99,9 +86,9 @@ module GrapedMoviez
           requires :day, type: String
         end
         get :functions do
-          day = Day.where(day: params[:day].to_date).first
+          day = Day.by_day(params[:day].to_date).first
           if day
-            functions = Function.where(day_id: day.id).each_with_object({}) do |function, hsh|
+            functions = Function.by_day(day.id).each_with_object({}) do |function, hsh|
               hsh[:id] = function.id
               hsh[:day] = function.day.values
               hsh[:movie] = function.movie.values
@@ -123,8 +110,8 @@ module GrapedMoviez
           end
         end
         post :reservations do
-          day = Day.where(day: params[:reservation][:day]&.to_date).first
-          movie = Movie.where(Sequel.lit('LOWER(name) LIKE ?', "#{params[:reservation][:movie]&.downcase}")).first
+          day = Day.by_day(params[:reservation][:day]&.to_date).first
+          movie = Movie.by_name(params[:reservation][:movie]).first
           function = Function.where(movie_id: movie.id, day_id: day.id).first if movie && day
           if function
             reservation = Reservation.new(
@@ -132,18 +119,14 @@ module GrapedMoviez
               seats: params[:reservation][:seats].to_i, 
               user_email: params[:reservation][:user_email]
             )
-            if reservation.save
-              serialized_reservation = {}.tap do |res|
+            save(reservation) do
+              {}.tap do |res|
                 res[:id] = reservation.id
                 res[:seats] = reservation.seats
                 res[:user_email] = reservation.user_email
                 res[:day] = reservation.function.day.values
                 res[:movie] = reservation.function.movie.values
               end
-              { reservation: serialized_reservation }
-            else
-              status 520
-              { error: "there were errors while creating a reservation: #{reservation.errors}" }
             end
           else
             status 404
