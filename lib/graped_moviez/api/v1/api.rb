@@ -76,7 +76,7 @@ module GrapedMoviez
               end
             end
           else
-            status 400
+            status 404
             { errors: "Could not find the given day or movie. Please check your parameters"}
           end
         end
@@ -88,15 +88,43 @@ module GrapedMoviez
         get :functions do
           day = Day.by_day(params[:day].to_date).first
           if day
-            functions = Function.by_day(day.id).each_with_object({}) do |function, hsh|
-              hsh[:id] = function.id
-              hsh[:day] = function.day.values
-              hsh[:movie] = function.movie.values
+            functions = Function.by_day(day.id).map do |function|
+              {}.tap do |hsh|
+                hsh[:id] = function.id
+                hsh[:day] = function.day.values
+                hsh[:movie] = function.movie.values
+              end
             end
-            { functions: Array.wrap(functions) }
+            { functions: functions }
           else
-            status 400
             { functions: [] }
+          end
+        end
+
+        desc 'Renders a list of reservations by time range.'
+        params do
+          requires :start_date, type: String
+          requires :end_date, type: String
+        end
+        get :reservations do
+          days = Day.by_day_range(
+            start_date: params[:start_date].to_date,
+            end_date: params[:end_date].to_date,
+          ).all
+          reservations = days.flat_map(&:functions).flat_map(&:reservations) if !days.empty?
+          if reservations
+            serialized_reservations = reservations.map do |res|
+              {}.tap do |hsh|
+                hsh[:id] = res.id
+                hsh[:day] = res.function.day.values
+                hsh[:movie] = res.function.movie.values
+                hsh[:seats] = res.seats
+                hsh[:user_email] = res.user_email
+              end
+            end
+            { reservations: Array.wrap(serialized_reservations) }
+          else
+            { reservations: [] }
           end
         end
 

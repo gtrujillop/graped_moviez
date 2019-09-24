@@ -20,6 +20,8 @@ module GrapedMoviez
             status 520
             { errors: "Could not create a #{key} #{object.errors}"}
           end
+        rescue => e
+          raise StandardError.new("There were errors while saving this entity: #{e.message}")
         end
 
         def render_simple(type)
@@ -27,9 +29,10 @@ module GrapedMoviez
           raise TypeError.new("Is not a valid type") unless type.is_a? Symbol
           klass = Kernel.const_get "GrapedMoviez::Models::#{type.capitalize}"
           objects = klass.all.map(&:values)
-          { "#{key}": objects }          
+          { "#{key}": objects }
+        rescue => e
+          raise StandardError.new("There were errors while serializing this entity: #{e.message}")        
         end
-        
         
       end
     end

@@ -4,6 +4,7 @@ module GrapedMoviez
     class Function < Sequel::Model
       many_to_one :day
       many_to_one :movie
+      one_to_many :reservations
       
       MAX_SEATS = 10
 
